@@ -50,6 +50,19 @@ module.exports = {
           "sass-loader",
         ],
       },
+      {
+        //拡張子がpng,jpg,gif,svgを検知したら
+        test: /\.(png|jpg|gif|svg)/,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              //[name]は画像名、[ext]は拡張子
+              name: "images/[name].[ext]",
+            },
+          },
+        ],
+      },
     ],
   },
   plugins: [

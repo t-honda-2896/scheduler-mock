@@ -2,7 +2,12 @@ import * as React from "react";
 import styled from "styled-components";
 import media from "../../styles/MediaStyle";
 import theme from "../../styles/Theme";
+import { generateSchedule } from "../../utils/demo-data-utils";
+
 const Schedule: React.FC = React.memo(() => {
+  const schedule = generateSchedule();
+  // const json = JSON.stringify(schedule);
+  console.log(schedule);
   return (
     <Container>
       <Content>
