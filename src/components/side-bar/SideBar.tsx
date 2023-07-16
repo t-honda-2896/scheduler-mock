@@ -60,7 +60,7 @@ export const SideBar: React.FC<P> = React.memo((props) => {
 });
 
 const Container = styled.div<{ isOpen: boolean }>`
-  width: ${({ isOpen }) => (isOpen ? "384px" : "90px")};
+  width: ${({ isOpen }) => (isOpen ? "324px" : "90px")};
   height: 100%;
   display: flex;
   flex-direction: column;

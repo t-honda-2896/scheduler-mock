@@ -4,10 +4,11 @@ export default {
     lightGray: "#E3E3E3",
     navy: "#2133CA",
     white: "#FFFFFF",
+    paleNavy: "#5C6BC0",
   },
   border: {
     gray: "#D7D5D9",
-    lightGray: "#F3F3F3",
+    lightGray: "#E1E1E1",
     navy: "#2133CA",
     red: "#FF1919",
   },
@@ -25,6 +26,7 @@ export default {
       black: "#000000",
       white: "#FFFFFF",
       gray: "#737278",
+      lightGray: "#D1D1D1",
     },
     fontSize: {
       twelve: 12,
