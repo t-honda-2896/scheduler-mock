@@ -1,6 +1,7 @@
 export default {
   background: {
     gray: "#746B7B",
+    lightGray: "#E3E3E3",
     navy: "#2133CA",
     white: "#FFFFFF",
   },
@@ -23,7 +24,7 @@ export default {
     fontColor: {
       black: "#000000",
       white: "#FFFFFF",
-      gray: "#9E9E9E",
+      gray: "#737278",
     },
     fontSize: {
       twelve: 12,

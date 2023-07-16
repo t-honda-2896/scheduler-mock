@@ -2,11 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 import media from "../../styles/MediaStyle";
 import theme from "../../styles/Theme";
-const Home: React.FC = React.memo(() => {
+const Schedule: React.FC = React.memo(() => {
   return (
     <Container>
       <Content>
-        <Title>Home</Title>
+        <Title>Schedule</Title>
       </Content>
     </Container>
   );
@@ -28,4 +28,4 @@ const Title = styled.span`
     font-size: ${theme.typography.fontSize.twentyFour}px;
   `}
 `;
-export default Home;
+export default Schedule;

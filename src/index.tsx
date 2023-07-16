@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import ResetStyle from "./styles/ResetStyle";
 import GlobalStyle from "./styles/GlobalStyle";
-import Home from "./pages/home/Home";
+import Pages from "./pages";
 
 const App = () => {
   return (
@@ -12,7 +12,7 @@ const App = () => {
       <GlobalStyle />
       <Switch>
         <Route path="/">
-          <Home />
+          <Pages />
         </Route>
         <Redirect to="/" />
       </Switch>
