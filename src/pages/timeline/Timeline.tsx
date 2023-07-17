@@ -2,37 +2,22 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import theme from "../../styles/Theme";
 import { Calendar } from "../../components/calendar/Calendar";
-import { differenceInHours, format, isSameDay } from "date-fns";
+import { differenceInHours, format, getHours, isSameDay } from "date-fns";
 import { DISPLAY_TIME } from "../../constants/date-constants";
 import {
   SAMPLE_CONSTRUCTION_SITES,
   SAMPLE_SCHEDULES,
-  SAMPLE_USERS,
   SampleSchedule,
-  SampleUser,
 } from "../../constants/demo-data-constants";
-import { getUserNameById } from "../../utils/demo-data-utils";
+import {
+  getConstructionNameById,
+  getUserNameById,
+} from "../../utils/demo-data-utils";
 
 const X_SCALE = 48;
 const Y_SCALE = 194;
 const SCALE_HEIGHT = 48;
 const CELL_WIDTH = 48;
-
-interface ScheduleForUser {
-  user: SampleUser;
-  schedules: SampleSchedule[];
-}
-
-const isMatchStartAt = (
-  selectedDate: Date,
-  schedule: SampleSchedule,
-  hour: number,
-  minute: number
-): boolean =>
-  schedule.startAt ===
-  `${format(selectedDate, "yyyy-MM-dd")}T${`0${hour}`.slice(
-    -2
-  )}:${`0${minute}`.slice(-2)}:00Z`;
 
 const Timeline: React.FC = React.memo(() => {
   const scrollableRef = useRef<HTMLDivElement>(null);
@@ -49,12 +34,10 @@ const Timeline: React.FC = React.memo(() => {
       if (a.userId !== b.userId) {
         return a.userId < b.userId ? -1 : 1;
       }
-      return a.startAt < b.startAt ? 1 : -1;
+      return a.startAt < b.startAt ? -1 : 1;
     });
     return sortedSchedulesOfToday;
   }, [selectedDate]);
-
-  console.log("schedulesOfTodayByUser:", schedulesOfTodayByUser);
 
   const handleDateClicked = useCallback(
     (date: Date) => {
@@ -108,104 +91,36 @@ const Timeline: React.FC = React.memo(() => {
                     getUserNameById(schedule.userId)}
                 </YScale>
               ))}
+              <YScale />
             </ScrollableY>
-            <Scrollable ref={scrollableRef} onScroll={handleScroll}>
+            <Scrollable
+              className="scrollable"
+              ref={scrollableRef}
+              onScroll={handleScroll}
+            >
               {DISPLAY_TIME.map((_, idx) => (
                 <HourScale key={`header-x-cell-${idx}`}>
                   <XScale left filled />
                   <XScale right filled />
                 </HourScale>
               ))}
+              {schedulesOfTodayByUser.map((schedule, idx) => (
+                <ScheduleLine
+                  key={`line-${idx}`}
+                  schedule={schedule}
+                  rowNum={idx}
+                >
+                  {getConstructionNameById(schedule.constructionId)}
+                </ScheduleLine>
+              ))}
             </Scrollable>
           </TimelineBody>
-
-          {/* <TimelineBody_2>
-            <TimelineOptionItems>
-              <TimelineOptionItem></TimelineOptionItem>
-              {Object.keys(schedulesOfTodayByUser)
-                .sort((a, b) => (Number(a) > Number(b) ? 1 : -1))
-                .map((key, idx) => (
-                  <TimelineOptionItem
-                    key={`timeline-option-item-${idx}`}
-                    count={schedulesOfTodayByUser[Number(key)].schedules.length}
-                  >
-                    {schedulesOfTodayByUser[Number(key)].user.name}
-                  </TimelineOptionItem>
-                ))}
-            </TimelineOptionItems>
-            <TimeTable>
-              <TimeTableChildRow>
-                {DISPLAY_TIME.map((time, idx) => (
-                  <TimeTableCells key={`table-cells-${idx}`}>
-                    <TimeTableCell left>{time}時</TimeTableCell>
-                    <TimeTableCell right />
-                  </TimeTableCells>
-                ))}
-              </TimeTableChildRow>
-              {Object.keys(schedulesOfTodayByUser)
-                .sort((a, b) => (Number(a) > Number(b) ? 1 : -1))
-                .map((key, idx) => (
-                  <TimeTableParentRow
-                    className="parent-row"
-                    key={`parent-row-${idx}`}
-                  >
-                    {schedulesOfTodayByUser[Number(key)].schedules.map(
-                      (schedule, idxOfSchedule) => (
-                        <TimeTableChildRow
-                          className="child-row"
-                          key={`child-row-${idxOfSchedule}`}
-                        >
-                          {DISPLAY_TIME.map((time, idxOfTime) => (
-                            <TimeTableCells
-                              key={`table-cells-${idxOfSchedule}-${idxOfTime}`}
-                            >
-                              <TimeTableCell left>
-                                {isMatchStartAt(
-                                  selectedDate,
-                                  schedule,
-                                  time,
-                                  0
-                                ) && (
-                                  <ScheduleLine
-                                    schedule={schedule}
-                                    hour={time}
-                                    minute={0}
-                                  ></ScheduleLine>
-                                )}
-                              </TimeTableCell>
-                              <TimeTableCell right>
-                                {isMatchStartAt(
-                                  selectedDate,
-                                  schedule,
-                                  time,
-                                  30
-                                ) && (
-                                  <ScheduleLine
-                                    schedule={schedule}
-                                    hour={time}
-                                    minute={30}
-                                  ></ScheduleLine>
-                                )}
-                              </TimeTableCell>
-                            </TimeTableCells>
-                          ))}
-                        </TimeTableChildRow>
-                      )
-                    )}
-                  </TimeTableParentRow>
-                ))}
-            </TimeTable>
-          </TimelineBody_2> */}
         </TimelineArea>
       </Content>
     </Container>
   );
 });
 
-const ASD = styled.div`
-  min-width: 800px;
-  background: red;
-`;
 const Container = styled.div`
   max-width: 100%;
   height: 100%;
@@ -253,8 +168,10 @@ const ScrollableX = styled.div`
   }
 `;
 const HourScale = styled.div`
+  position: sticky;
   min-width: max-content;
-  height: 100%;
+  top: 0;
+  bottom: 0;
   display: flex;
 `;
 const XScale = styled.div<{
@@ -263,7 +180,7 @@ const XScale = styled.div<{
   filled?: boolean;
 }>`
   width: ${X_SCALE}px;
-  height: ${({ filled }) => (filled ? "100%" : `${SCALE_HEIGHT}px`)};
+  height: ${({ filled }) => (filled ? "auto" : `${SCALE_HEIGHT}px`)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -291,17 +208,8 @@ const Scrollable = styled.div`
   overflow: scroll;
   display: flex;
   position: relative;
-`;
-
-const TimelineBody_2 = styled.div`
-  display: flex;
-  flex: 1;
-  overflow-y: scroll;
-`;
-const TimelineContent = styled.div`
-  // width: 100%;
-  display: flex;
-  height: max-content;
+  // padding-bottom: 64px;
+  height: auto;
 `;
 const ScrollableY = styled.div`
   width: 194px;
@@ -316,51 +224,25 @@ const ScrollableY = styled.div`
     display: none;
   }
 `;
-const TimelineOptionItem = styled.div<{ count?: number }>`
-  min-height: ${({ count = 1 }) => count * CELL_WIDTH}px;
-  padding: ${theme.spacing}px ${theme.spacing * 1.5}px;
-  display: flex;
-  align-items: center;
-`;
-const TimeTableParentRow = styled.div`
-  width: max-content;
-  display: flex;
-  flex-direction: column;
-`;
-const TimeTableChildRow = styled.div`
-  width: max-content;
-  display: flex;
-  border-right: 1px solid ${theme.border.gray};
-  position: relative;
-`;
-const TimeTableCells = styled.div`
-  display: flex;
-`;
-const TimeTableCell = styled.div<{ left?: boolean; right?: boolean }>`
-  min-width: ${CELL_WIDTH}px;
-  height: ${CELL_WIDTH}px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  ${({ left }) => left && `border-left: 1px solid  ${theme.border.gray};`}
-  ${({ right }) => right && `border-left: 1px dashed  ${theme.border.gray};`}
-`;
 
 const ScheduleLine = styled.div<{
   schedule: SampleSchedule;
-  hour: number;
-  minute: number;
+  rowNum: number;
 }>`
+  color: ${theme.typography.fontColor.white};
+  display: flex;
+  align-items: center;
+  padding-left: ${theme.spacing}px;
   position: absolute;
   width: ${({ schedule }) =>
     differenceInHours(new Date(schedule.endAt), new Date(schedule.startAt)) *
       2 *
       CELL_WIDTH -
     4}px;
-  top: 4px;
-  bottom: 4px;
-  left: ${({ hour, minute }) =>
-    (hour - 6) * 2 * CELL_WIDTH + (minute ? CELL_WIDTH : 0) + 2}px;
+  top: ${({ rowNum }) => rowNum * SCALE_HEIGHT + 4}px;
+  height: ${SCALE_HEIGHT - 8}px;
+  left: ${({ schedule }) =>
+    (getHours(new Date(schedule.startAt)) - 15) * 2 * X_SCALE + 2}px;
   border-radius: 6px;
   background: ${({ schedule }) =>
     SAMPLE_CONSTRUCTION_SITES.find(

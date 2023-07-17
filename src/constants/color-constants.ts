@@ -1,8 +1,8 @@
 export const BACKGROUND_COLORS = [
-  "#EF9A9A",
-  "#80CBC4",
-  "#FFCC80",
-  "#B0BEC5",
+  "#009688",
+  "#795548",
+  "#673AB7",
+  "#F44336",
   "#FFF9C4",
   "#FFCCBC",
   "#CFD8DC",

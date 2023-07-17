@@ -205,3 +205,7 @@ export function generateSchedule() {
 export function getUserNameById(id: number) {
   return SAMPLE_USERS.find((user) => user.id === id)?.name || "";
 }
+
+export function getConstructionNameById(id: number) {
+  return SAMPLE_CONSTRUCTION_SITES.find((site) => site.id === id)?.name || "";
+}
