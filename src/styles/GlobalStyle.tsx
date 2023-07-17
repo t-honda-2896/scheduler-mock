@@ -6,10 +6,10 @@ import "@fontsource/noto-sans-jp/700.css";
 const GlobalStyle = createGlobalStyle`
   * {
     font-family: "Noto Sans JP", sans-serif;
+    overflow: hidden;
   }
 
   html {
-    overflow-y: scroll;
     width: 100%;
     height: 100%;
     background-color: #F3F3F3;

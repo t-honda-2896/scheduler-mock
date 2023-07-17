@@ -116,7 +116,7 @@ export const Calendar: React.FC<P> = React.memo((props) => {
 
 const Container = styled.div`
   width: 248px;
-  height: 232px;
+  min-height: 232px;
   display: flex;
   flex-direction: column;
   padding: ${theme.spacing * 3}px;
