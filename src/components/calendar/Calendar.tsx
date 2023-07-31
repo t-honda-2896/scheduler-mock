@@ -177,10 +177,10 @@ const DateCell = styled(Cell)<{ isThisMonth?: boolean; selected?: boolean }>`
   ${({ selected }) =>
     selected &&
     `
-      background: ${theme.background.navy};
+      background: ${theme.primary};
       color:  ${theme.typography.fontColor.white};
       &:hover {
-        background: ${theme.background.paleNavy};
+        background: ${theme.primary};
       }
     `}
 `;

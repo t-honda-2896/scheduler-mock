@@ -12,20 +12,19 @@ import { Header } from "../components/header/Header";
 
 const SIDE_MENUS: Menu[] = [
   {
-    label: "タイムライン",
-    toUrl: PathNameEnum.TIMELINE,
-    icon: <ViewTimelineIcon fontSize="inherit" />,
-  },
-  {
-    label: "スケジュール",
+    label: "出面表",
     toUrl: PathNameEnum.SCHEDULE,
     icon: <CalendarMonthIcon fontSize="inherit" />,
+  },
+  {
+    label: "稼働状況",
+    toUrl: PathNameEnum.TIMELINE,
+    icon: <ViewTimelineIcon fontSize="inherit" />,
   },
 ];
 
 const Pages: FC = React.memo(() => {
   const { to } = useContext(Path);
-  console.log("to:", to);
   return (
     <Container>
       <Header />

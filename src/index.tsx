@@ -7,7 +7,6 @@ import { Path, usePath } from "./contexts/path-context";
 
 const App = () => {
   const path = usePath();
-  // console.log("to:", to);
   return (
     <React.StrictMode>
       <Path.Provider value={path}>

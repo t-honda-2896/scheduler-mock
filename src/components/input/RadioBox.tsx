@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import theme from "../../styles/Theme";
+import Theme from "../../styles/Theme";
 
 export interface Labels {
   [option: string]: string;
@@ -35,6 +36,7 @@ export const RadioBox: React.FC<P> = React.memo((props) => {
 
 const Label = styled.label`
   cursor: pointer;
+  height: 24px;
 `;
 
 const Container = styled.div`
@@ -54,7 +56,7 @@ const CustomRadio = styled.span<{ checked?: boolean }>`
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 2px solid #3f51b5;
+  border: 2px solid ${Theme.primary};
   margin-right: 4px;
   top: 3px;
 
@@ -67,7 +69,7 @@ const CustomRadio = styled.span<{ checked?: boolean }>`
     width: 9px;
     height: 9px;
     border-radius: 50%;
-    background-color: #303f9f;
+    background-color: ${Theme.primary};
     opacity: ${(props) => (props.checked ? "1" : "0")};
   }
 `;

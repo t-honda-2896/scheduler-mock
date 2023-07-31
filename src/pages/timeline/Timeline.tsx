@@ -28,7 +28,7 @@ import {
   DisplayModeOptions,
 } from "../../constants/calendar-constants";
 import { RadioBox } from "../../components/input/RadioBox";
-import { CheckBox } from "../../components/input/CheckBox";
+// import { CheckBox } from "../../components/input/CheckBox";
 
 const X_SCALE = 48;
 const Y_SCALE = 194;
@@ -57,13 +57,21 @@ const Timeline: React.FC = React.memo(() => {
         isBefore(new Date(schedule.startAt), endAt)
       );
     });
-    const sortedschedulesOfRange = schedulesOfRange.sort((a, b) => {
+    const sortedSchedulesOfRange = schedulesOfRange.sort((a, b) => {
       if (a.userId !== b.userId) {
         return a.userId < b.userId ? -1 : 1;
       }
       return a.startAt < b.startAt ? -1 : 1;
     });
-    return sortedschedulesOfRange;
+    let rowNum = 0;
+    const schedulesWithRownum = sortedSchedulesOfRange.map(
+      (row, idx, array) => {
+        if (idx > 0 && array[idx - 1].userId !== row.userId) rowNum++;
+        row.rowNum = rowNum;
+        return row;
+      }
+    );
+    return schedulesWithRownum;
   }, [endAt, startAt]);
 
   const handleRadioClicked = useCallback(
@@ -100,7 +108,7 @@ const Timeline: React.FC = React.memo(() => {
   return (
     <Container>
       <Header>
-        <Title>Timeline</Title>
+        <Title>稼働状況</Title>
         <RadioWrapper>
           <RadioBox
             labels={DisplayModeLabels}
@@ -116,12 +124,12 @@ const Timeline: React.FC = React.memo(() => {
             selectedDate={selectedDate}
             handleDateClicked={handleDateClicked}
           />
-          <CheckBox
+          {/* <CheckBox
             labels={DisplayModeLabels}
             initialValue={displayMode}
             options={DisplayModeOptions}
             onChange={handleRadioClicked}
-          />
+          /> */}
         </Facet>
         <TimelineArea>
           <TimelineHeader>
@@ -170,12 +178,19 @@ const Timeline: React.FC = React.memo(() => {
           </TimelineHeader>
           <TimelineBody>
             <ScrollableY ref={scrollableYRef}>
-              {schedulesOfRangeByUser.map((schedule, idx, prev) => (
-                <YScale key={`user-${idx}`}>
-                  {(idx === 0 || schedule.userId !== prev[idx - 1].userId) &&
-                    getUserNameById(schedule.userId)}
-                </YScale>
-              ))}
+              {schedulesOfRangeByUser.reduce<React.ReactElement[]>(
+                (prev, curr, idx, array) => {
+                  if (idx === 0 || curr.userId !== array[idx - 1].userId) {
+                    prev.push(
+                      <YScale key={`user-${idx}`}>
+                        {getUserNameById(curr.userId)}
+                      </YScale>
+                    );
+                  }
+                  return prev;
+                },
+                []
+              )}
               <YScale />
             </ScrollableY>
             <Scrollable
@@ -197,7 +212,7 @@ const Timeline: React.FC = React.memo(() => {
                     displayMode={displayMode}
                     schedule={schedule}
                     startAt={startAt}
-                    rowNum={idx}
+                    rowNum={schedule.rowNum!}
                   >
                     {getConstructionNameById(schedule.constructionId)}
                   </ScheduleLine>
@@ -226,7 +241,7 @@ const Timeline: React.FC = React.memo(() => {
                     displayMode={displayMode}
                     schedule={schedule}
                     startAt={startAt}
-                    rowNum={idx}
+                    rowNum={schedule.rowNum!}
                   >
                     {getConstructionNameById(schedule.constructionId)}
                   </ScheduleLine>
@@ -276,7 +291,8 @@ const TimelineArea = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: ${theme.spacing * 2}px ${theme.spacing * 4}px;
+  padding: ${theme.spacing * 2}px ${theme.spacing * 4}px ${theme.spacing * 2}px
+    0;
 `;
 const TimelineHeader = styled.div`
   width: 100%;
@@ -395,8 +411,9 @@ const ScheduleLine = styled.div<{
   position: absolute;
   width: ${({ displayMode, schedule }) =>
     differenceInHours(new Date(schedule.endAt), new Date(schedule.startAt)) *
-    2 *
-    (X_SCALE / DisplayModeCorrect[displayMode])}px;
+      2 *
+      (X_SCALE / DisplayModeCorrect[displayMode]) -
+    4}px;
   top: ${({ rowNum }) => rowNum * SCALE_HEIGHT + 4}px;
   height: ${SCALE_HEIGHT - 8}px;
   left: ${({ displayMode, schedule, startAt }) =>

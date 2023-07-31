@@ -30,6 +30,7 @@ export interface SampleSchedule {
   constructionId: number;
   startAt: string;
   endAt: string;
+  rowNum?: number;
 }
 
 export const SAMPLE_USERS: SampleUser[] = [
