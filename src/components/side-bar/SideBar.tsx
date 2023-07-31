@@ -1,42 +1,41 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import styled from "styled-components";
 import Theme from "../../styles/Theme";
 import media from "../../styles/MediaStyle";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
-import { Link } from "react-router-dom";
+import { Path } from "../../contexts/path-context";
+import { PathNameEnum } from "../../enum/path-enum";
 
 export interface Menu {
   label: string;
-  toUrl: string;
+  toUrl: PathNameEnum;
   icon: React.ReactElement;
 }
 
 interface P {
-  appName?: string;
+  entityName: string;
   menus: Menu[];
 }
 
 export const SideBar: React.FC<P> = React.memo((props) => {
-  const { appName, menus } = props;
+  const { entityName, menus } = props;
+  const { linkTo } = useContext(Path);
   const [selectedIdx, setSelectedIdx] = useState<number>();
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
   const handleClicked = useCallback(
     (idx) => {
       setSelectedIdx(idx);
+      linkTo(menus[idx].toUrl);
     },
-    [setSelectedIdx]
+    [menus, setSelectedIdx]
   );
 
   return (
     <Container isOpen={isOpen}>
-      {appName && (
+      {entityName && (
         <Header isOpen={isOpen}>
-          {isOpen && (
-            <Link to="/" onClick={() => handleClicked(-1)}>
-              <Title>{appName}</Title>
-            </Link>
-          )}
+          <EntityName isOpen={isOpen}>{entityName}</EntityName>
           <IconWrapper onClick={() => setIsOpen(!isOpen)}>
             <MenuOpenIcon fontSize="inherit" />
           </IconWrapper>
@@ -48,7 +47,6 @@ export const SideBar: React.FC<P> = React.memo((props) => {
             key={`menu-item-${idx}`}
             selected={selectedIdx === idx}
             onClick={() => handleClicked(idx)}
-            to={menu.toUrl}
           >
             <MenuIconWrapper>{menu.icon}</MenuIconWrapper>
             {isOpen && <MenuLabel>{menu.label}</MenuLabel>}
@@ -72,14 +70,19 @@ const Container = styled.div<{ isOpen: boolean }>`
 
 const Header = styled.div<{ isOpen: boolean }>`
   display: flex;
-  justify-content: ${({ isOpen }) => (isOpen ? "space-between" : "flex-end")};
+  justify-content: space-between;
   align-items: center;
+  height: 46px;
 `;
-const Title = styled.span`
-  font-size: ${Theme.typography.fontSize.twentyFour}px;
+const EntityName = styled.div<{ isOpen: boolean }>`
+  font-size: ${Theme.typography.fontSize.twenty}px;
+  width: ${({ isOpen }) => (isOpen ? "100%" : "0%")};
+  transition: width 500ms ease;
   white-space: nowrap;
+  height: 100%;
+  line-height: 46px;
   ${media.lessThan("medium")`
-    font-size: ${Theme.typography.fontSize.twentyFour}px;
+    font-size: ${Theme.typography.fontSize.sixteen}px;
   `}
 `;
 const IconWrapper = styled.div`
@@ -98,7 +101,7 @@ const MenuContent = styled.div`
   flex-direction: column;
   gap: ${Theme.spacing / 2}px;
 `;
-const MenuItem = styled(Link)<{ selected?: boolean }>`
+const MenuItem = styled.div<{ selected?: boolean }>`
   padding: ${Theme.spacing}px;
   display: flex;
   align-items: center;
