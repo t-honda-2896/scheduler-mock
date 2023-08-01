@@ -124,12 +124,6 @@ const Timeline: React.FC = React.memo(() => {
             selectedDate={selectedDate}
             handleDateClicked={handleDateClicked}
           />
-          {/* <CheckBox
-            labels={DisplayModeLabels}
-            initialValue={displayMode}
-            options={DisplayModeOptions}
-            onChange={handleRadioClicked}
-          /> */}
         </Facet>
         <TimelineArea>
           <TimelineHeader>

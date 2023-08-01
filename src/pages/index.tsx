@@ -1,21 +1,28 @@
 import React, { FC, useContext } from "react";
 import styled from "styled-components";
 import { Menu, SideBar } from "../components/side-bar/SideBar";
+import ApartmentIcon from "@mui/icons-material/Apartment";
 import ViewTimelineIcon from "@mui/icons-material/ViewTimeline";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+// import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Timeline from "./timeline/Timeline";
 import Schedule from "./schedule/Schedule";
 import Home from "./home/Home";
 import { Path } from "../contexts/path-context";
 import { PathNameEnum } from "../enum/path-enum";
 import { Header } from "../components/header/Header";
+import Proposition from "./proposition/Proposition";
 
 const SIDE_MENUS: Menu[] = [
   {
-    label: "出面表",
-    toUrl: PathNameEnum.SCHEDULE,
-    icon: <CalendarMonthIcon fontSize="inherit" />,
+    label: "案件情報",
+    toUrl: PathNameEnum.PROPOSITION,
+    icon: <ApartmentIcon fontSize="inherit" />,
   },
+  // {
+  //   label: "出面表",
+  //   toUrl: PathNameEnum.SCHEDULE,
+  //   icon: <CalendarMonthIcon fontSize="inherit" />,
+  // },
   {
     label: "稼働状況",
     toUrl: PathNameEnum.TIMELINE,
@@ -34,6 +41,7 @@ const Pages: FC = React.memo(() => {
           {to === PathNameEnum.HOME && <Home />}
           {to === PathNameEnum.SCHEDULE && <Schedule />}
           {to === PathNameEnum.TIMELINE && <Timeline />}
+          {to === PathNameEnum.PROPOSITION && <Proposition />}
         </Content>
       </Body>
     </Container>

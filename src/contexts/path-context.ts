@@ -8,7 +8,7 @@ type PathContext = {
 export const Path = createContext<PathContext>({} as PathContext);
 
 export const usePath = (): PathContext => {
-  const [to, setTo] = useState(PathNameEnum.TIMELINE);
+  const [to, setTo] = useState(PathNameEnum.SCHEDULE);
 
   const linkTo = useCallback(
     (pathName: PathNameEnum): void => {

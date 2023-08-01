@@ -38,6 +38,7 @@ const Container = styled.div<{ type: ButtonType; variant: Variant }>`
     variant === "outline" && `border: 1px solid ${Theme.border.lightGray};`}
   border-radius: 6px;
   padding: ${Theme.spacing}px ${Theme.spacing * 2}px;
+  text-align: center;
   &:hover {
     cursor: pointer;
   }
