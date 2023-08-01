@@ -259,11 +259,11 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  gap: ${theme.spacing * 2}px;
+  padding: ${theme.spacing * 3}px ${theme.spacing * 4}px;
 `;
 const Header = styled.div`
   display: flex;
-  border-bottom: 1px solid ${theme.border.lightGray};
-  padding: ${theme.spacing * 2}px ${theme.spacing * 4}px;
 `;
 const Title = styled.div`
   font-size: ${theme.typography.fontSize.twenty}px;
@@ -283,6 +283,7 @@ const Content = styled.div`
   height: 100%;
   display: flex;
   flex: 1;
+  padding: ${theme.spacing * 2}px 0;
 `;
 const Facet = styled.div`
   width: 248px;
@@ -291,8 +292,6 @@ const TimelineArea = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: ${theme.spacing * 2}px ${theme.spacing * 4}px ${theme.spacing * 2}px
-    0;
 `;
 const TimelineHeader = styled.div`
   width: 100%;

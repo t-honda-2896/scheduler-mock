@@ -119,7 +119,7 @@ const Container = styled.div`
   min-height: 232px;
   display: flex;
   flex-direction: column;
-  padding: ${theme.spacing * 3}px;
+  padding: ${theme.spacing}px;
   color: ${theme.typography.fontColor.gray};
   gap: ${theme.spacing}px;
 `;
